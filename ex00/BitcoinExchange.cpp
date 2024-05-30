@@ -6,7 +6,7 @@
 /*   By: mhaile <mhaile@student.42abudhabi.ae>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 15:59:10 by mhaile            #+#    #+#             */
-/*   Updated: 2024/05/30 20:43:02 by mhaile           ###   ########.fr       */
+/*   Updated: 2024/05/30 21:28:29 by mhaile           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,37 +49,41 @@ void BitcoinExchange::printData() {
     }
 }
 
-int BitcoinExchange::is_infile(std::string input) {
-	std::ifstream file(input);
+bool BitcoinExchange::is_infile(std::ifstream& file) {
+	if (file.is_open()) {
+		if (file.peek() == EOF) {
+			std::cout << "File is empty" << std::endl;
+			return false;
+		}
+	}
+	else {
+		std::cout << "File not found" << std::endl;
+		return false;
+	}
+	return true;
+}
+
+int BitcoinExchange::parseData(std::ifstream& file) {
 	std::string line;
 
-	if (file.is_open())
-		return (file.close(), 1);
-	else
-		return 0;
+	std::getline(file, line);
+	printf("line: %s\n", line.c_str());
+	if (line != "date | value") {
+		std::cout << "Invalid file format" << std::endl;
+		return 1;
+	}
+	
+	return 0;
 }
 
 void BitcoinExchange::exec(std::string input) {
-	std::ifstream file(input);
+	std::ifstream file(input.c_str());
 	std::string line;
-
-	if (!this->is_infile(input)) {
-		std::cout << "File not found" << std::endl;
+	if (!this->is_infile(file))
 		return ;
-	}
-	printf("File found\n");
-	// if (file.is_open()) {
-	// 	std::getline(file, line);
-	// 	while(std::getline(file, line)) {
-	// 		std::string key = line.substr(0, line.find(","));
-	// 		std::string value = line.substr(line.find(",") + 1, line.length());
-	// 		if (_data.find(key) != _data.end())
-	// 			std::cout << key << " is in the file" << std::endl;
-	// 		else
-	// 			std::cout << key << " is not in the file" << std::endl;
-	// 	}
-	// 	file.close();
-	// }
-	// else
-	// 	std::cout << "Unable to open file" << std::endl;
+
+	if (this->parseData(file))
+		return ;
+	
+	printf("File found and has something inside\n");
 }

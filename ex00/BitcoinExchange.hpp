@@ -6,7 +6,7 @@
 /*   By: mhaile <mhaile@student.42abudhabi.ae>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 15:36:56 by mhaile            #+#    #+#             */
-/*   Updated: 2024/05/30 20:42:44 by mhaile           ###   ########.fr       */
+/*   Updated: 2024/05/30 21:30:08 by mhaile           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,10 @@ class BitcoinExchange {
 		~BitcoinExchange();
 		
 		void printData(); // Function to print map data. To be deleted later.
-		void exec(std::string input); 
-		int is_infile(std::string input);
+		bool is_infile(std::ifstream& file); // Parse input file and check if it is empty.
+		int  parseData(std::ifstream& file); // Parse data inside the input file.
 
+		void exec(std::string input); // Main function to execute the program.
 		// class fileNotFoundException : public std::exception {
 		// 	public:
 		// 		virtual const char* what() const throw() {
