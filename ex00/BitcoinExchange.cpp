@@ -6,7 +6,7 @@
 /*   By: mhaile <mhaile@student.42abudhabi.ae>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 15:59:10 by mhaile            #+#    #+#             */
-/*   Updated: 2024/05/31 23:37:47 by mhaile           ###   ########.fr       */
+/*   Updated: 2024/06/01 16:56:17 by mhaile           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ BitcoinExchange::BitcoinExchange() {
 		file.close();
 	}
 	else
-		std::cout << "Unable to open file" << std::endl;
+		throw fileNotFoundException();
 }
 
 BitcoinExchange::BitcoinExchange(const BitcoinExchange& src) {
@@ -52,7 +52,7 @@ void BitcoinExchange::printData() {
 bool BitcoinExchange::is_infile(std::ifstream& file) {
 	if (file.is_open()) {
 		if (file.peek() == EOF) {
-			std::cout << "File is empty" << std::endl;
+			std::cout << "input file is empty" << std::endl;
 			return false;
 		}
 	}
@@ -77,13 +77,13 @@ bool BitcoinExchange::isLeapYear(int dayInt, int monthInt, int yearInt) {
 	if (monthInt == 2) {
 		if ((yearInt % 4 == 0 && yearInt % 100 != 0) || (yearInt % 400 == 0)) {
 			if (dayInt > 29) {
-				std::cout << "Invalid date" << std::endl;
+				// std::cout << "Invalid date" << std::endl;
 				return false;
 			}
 		}
 		else {
 			if (dayInt > 28) {
-				std::cout << "Invalid date" << std::endl;
+				// std::cout << "Invalid date" << std::endl;
 				return false;
 			}
 		}
@@ -91,7 +91,7 @@ bool BitcoinExchange::isLeapYear(int dayInt, int monthInt, int yearInt) {
 	return true;
 }
 
-int parseValue(std::string value) {
+int BitcoinExchange::parseValue(std::string value) {
 	if (value.empty()) {
 		std::cout << "Error: Value is empty" << std::endl;
 		return 1;
@@ -102,8 +102,12 @@ int parseValue(std::string value) {
 		std::cout << "Error: Invalid value: " << value << std::endl;
 		return 1;
 	}
-	if (val < 0 || val > 1000) {
-		std::cout << "Error: value must be between 0 and 1000" << std::endl;
+	if (val < 0) {
+		std::cout << "Error: not a positive number." << std::endl;
+		return 1;
+	}
+	else if (val > 1000) {
+		std::cout << "Error: too large a number." << std::endl; 
 		return 1;
 	}
 
@@ -125,45 +129,42 @@ std::string BitcoinExchange::ft_trim(std::string str) {
     return str.substr(first, (last - first + 1));
 }
 
-// std::string BitcoinExchange::previousDay(std::string& date) {
-// 	int year = ft_stoi(date.substr(0, 4));
-// 	int month = ft_stoi(date.substr(5, 2));
-// 	int day = ft_stoi(date.substr(8, 2));
+std::string BitcoinExchange::previousDay(std::string& date) {
+	int year = ft_stoi(date.substr(0, 4));
+	int month = ft_stoi(date.substr(5, 2));
+	int day = ft_stoi(date.substr(8, 2));
 	
-// 	// daysInMonth = number of days in each month
-// 	int daysInMonth[] = {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31}; // 0 is a placeholder
-// 	if ((year % 4 == 0 && year % 100 != 0) || (year % 400 == 0)) 			// check if year is a leap year
-// 		daysInMonth[2] = 29;
-		
-// 	day--;
-// 	if (day == 0) {
-// 		month--;
-// 		if (month == 0) {
-// 			year--;
-// 			month = 12;
-// 		}
-// 		day = daysInMonth[month];
-// 	}
-	
-// 	std::string newDate = toStr(year) + "-";
-// 	std::string newMonth = toStr(month) + "-";
-// 	std::string newDay = toStr(day);
+	// daysInMonth = number of days in each month
+	int daysInMonth[] = {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31}; // 0 is a placeholder
+	if ((year % 4 == 0 && year % 100 != 0) || (year % 400 == 0)) 			// check if year is a leap year
+		daysInMonth[2] = 29;
+	day--;
+	if (day == 0) {
+		month--;
+		if (month == 0) {
+			year--;
+			month = 12;
+		}
+		day = daysInMonth[month];
+	}
+	std::string newYear = ft_toStr(year) + "-";
+	std::string newMonth = (month < 10) ? "0" + ft_toStr(month) + "-": ft_toStr(month) + "-";
+	std::string newDay = (month < 10) ? "0" + ft_toStr(day) : ft_toStr(day);
+	return newYear + newMonth + newDay;
+}
 
-// 	return newDate + newMonth + newDay;	
-// }
-
-std::string toStr(int num) {
+std::string BitcoinExchange::ft_toStr(int num) {
 	std::stringstream ss;
 	ss << num;
 	return ss.str();
 }
 
-// int ft_stoi(const std::string& str) {
-// 	std::stringstream ss(str);
-// 	int num;
-// 	ss >> num;
-// 	return num;
-// }
+double BitcoinExchange::ft_stoi(const std::string& str) {
+	std::stringstream ss(str);
+	double num;
+	ss >> num;
+	return num;
+}
 
 int BitcoinExchange::parseData(std::ifstream& file) {
 	std::string line;
@@ -183,14 +184,14 @@ int BitcoinExchange::parseData(std::ifstream& file) {
 		if (value[value.length() - 1] == '\r')
 			value = value.substr(0, value.length() - 1);
 	
-		std::cout << value << std::endl;
+		// std::cout << value << std::endl;
 		if (date.length() != 10) {
-			std::cout << "Invalid date format" << std::endl;
-			return 1;
+			std::cout << "Error: bad input => " << date << std::endl;
+			continue;
 		}
 		if (date[4] != '-' || date[7] != '-') {
-			std::cout << "Invalid date format 2" << std::endl;
-        	return 1;
+			std::cout << "Error: bad input => " << date << std::endl;
+        	continue;
 		}
 
 		std::string year = date.substr(0, 4);
@@ -198,10 +199,10 @@ int BitcoinExchange::parseData(std::ifstream& file) {
 		std::string day = date.substr(8, 2);
 
 		if (!isDigit(year) || !isDigit(month) || !isDigit(day))
-			return 1;
+			continue;
 
 		if (parseValue(value))
-			return 1;
+			continue;
 
 		int yearInt, monthInt, dayInt;
 	
@@ -216,25 +217,42 @@ int BitcoinExchange::parseData(std::ifstream& file) {
 		if ((yearInt < 2009 || yearInt > 2022)
 			|| (monthInt < 1 || monthInt > 12)
 			|| (dayInt < 1 || dayInt > 31)) {
-			std::cout << "Invalid date" << std::endl;
-			return 1;
+			std::cout << "Error: bad input => " << date << std::endl;
+			continue;
+		}
+		if (yearInt == 2009) {
+			if (monthInt == 1) {
+				if (dayInt < 2) {
+					std::cout << "Error: bad input => " << date << std::endl;
+					continue;
+				}
+			}
 		}
 
 		if ((monthInt == 4 || monthInt == 6 || monthInt == 9
 			|| monthInt == 11) && dayInt > 30) {
-			std::cout << "Invalid date" << std::endl;
-			return 1;
+			std::cout << "Error: bad input => " << date << std::endl;
+			continue;
 		}
 
-		if (!isLeapYear(dayInt, monthInt, yearInt))
-			return 1;
+		if (!isLeapYear(dayInt, monthInt, yearInt)) {
+			std::cout << "Error: bad input => " << date << std::endl;
+			continue;
+		}
 
-		// std::map<std::string, std::string>::iterator it = _data.find(date);
-		// std::string prevDate = date;
-		// while (it != _data.end()) {
-		// 	// std::string& currentDate = prevDate;
-		// 	// prevDate = previousDay(currentDate);
-		// }
+		std::map<std::string, std::string>::iterator it;
+		std::string prevDate = date;
+		it = _data.find(date);
+		while (it == _data.end()) {
+			std::string& currentDate = prevDate;
+			prevDate = previousDay(currentDate);
+			if (prevDate == "2009-01-01") {
+				std::cout << "Error: No data found for " << date << std::endl;
+				break;
+			}
+			it = _data.find(prevDate);
+		}
+		std::cout << date << " => " << value << " = " << ft_stoi(it->second) * ft_stoi(value) << std::endl;
 	}
 	return 0;
 }
@@ -248,5 +266,5 @@ void BitcoinExchange::exec(std::string input) {
 	if (this->parseData(file))
 		return ;
 	
-	printf("File found and has something inside\n");
+	// printf("File found and has something inside\n");
 }
