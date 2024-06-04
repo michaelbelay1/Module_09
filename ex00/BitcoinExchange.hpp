@@ -6,7 +6,7 @@
 /*   By: mhaile <mhaile@student.42abudhabi.ae>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 15:36:56 by mhaile            #+#    #+#             */
-/*   Updated: 2024/06/01 16:24:56 by mhaile           ###   ########.fr       */
+/*   Updated: 2024/06/04 16:18:33 by mhaile           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ class BitcoinExchange {
 		std::map<std::string, std::string> _data;
 
 		
-		void printData();       				// Function to print map data. To be deleted later.
 		bool is_infile(std::ifstream& file); 	// Parse input file and check if it is empty.
 		bool isDigit(std::string str); 			// Check if a string is a digit.
 		int  parseData(std::ifstream& file);	// Parse data inside the input file.
@@ -46,11 +45,26 @@ class BitcoinExchange {
 		~BitcoinExchange();
 		
 		void exec(std::string input); 			// Main function to execute the program.
+		void printData();       				// Function to print map data. To be deleted later.
 		// *** Exception classes *** //
 		class fileNotFoundException : public std::exception {
 			public:
 				virtual const char* what() const throw() {
 					return "Error: File not found";
+				}
+		};
+
+		class fileEmptyException : public std::exception {
+			public:
+				virtual const char* what() const throw() {
+					return "Error: File is empty";
+				}
+		};
+
+		class invalidDBException : public std::exception {
+			public:
+				virtual const char* what() const throw() {
+					return "Error: Invalid DB";
 				}
 		};
 };

@@ -6,7 +6,7 @@
 /*   By: mhaile <mhaile@student.42abudhabi.ae>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 15:59:10 by mhaile            #+#    #+#             */
-/*   Updated: 2024/06/01 16:56:17 by mhaile           ###   ########.fr       */
+/*   Updated: 2024/06/04 16:24:13 by mhaile           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,15 @@
 BitcoinExchange::BitcoinExchange() {
 	std::ifstream file("data.csv");
 	std::string line;
-
+	
+	if (file.is_open()) {
+		if (file.peek() == EOF)
+			throw invalidDBException();
+	}
 	if (file.is_open()) {
 		std::getline(file, line);
+		if (line.length() != 18 || line != "date,exchange_rate")
+			throw invalidDBException();
 		while(std::getline(file, line)) {
 			std::string key = line.substr(0, line.find(","));
 			std::string value = line.substr(line.find(",") + 1, line.length());
