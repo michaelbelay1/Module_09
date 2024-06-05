@@ -6,7 +6,7 @@
 /*   By: mhaile <mhaile@student.42abudhabi.ae>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 12:44:29 by mhaile            #+#    #+#             */
-/*   Updated: 2024/06/05 14:51:22 by mhaile           ###   ########.fr       */
+/*   Updated: 2024/06/05 18:17:33 by mhaile           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,17 +23,21 @@
 
 class RPN {
 	private:
-		std::stack<int> _stack;
-		int  	findOperator(std::string oper, std::string operations[], int size);
-		double 	ft_stoi(const std::string& str);
-		std::string operand(std::string input);
+		std::stack<int> _stack; // Stack to store the operands.
+		int  		findOperator(std::string oper, std::string operations[], int size); // Find operator and return its index.
+		double 		ft_stoi(const std::string& str); // Convert a string to an integer using stringstream.
+		std::string operand(std::string input); // Return the operand from the input string.
+		void 		operation(int idx, int a, int b); // Perform the operation on the operands.
+		
 	public:
+		// *** Orthodox Canonical Form ***
 		RPN();
 		RPN(const RPN& src);
 		~RPN();
 		RPN& operator=(const RPN& src);
 		
-		void calculate(std::string input);
+		// *** Member functions ***
+		void calculate(std::string input); // Calculate the result of the RPN expression.
 };
 
 #endif
