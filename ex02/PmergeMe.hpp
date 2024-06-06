@@ -6,7 +6,7 @@
 /*   By: mhaile <mhaile@student.42abudhabi.ae>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 19:13:03 by mhaile            #+#    #+#             */
-/*   Updated: 2024/06/05 19:53:28 by mhaile           ###   ########.fr       */
+/*   Updated: 2024/06/06 22:49:16 by mhaile           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,36 +17,39 @@
 #include <algorithm>
 #include <vector>
 #include <iterator>
+#include <utility>
+#include <sstream>
+#include <climits>
+#include <cstdio> // To be deleted later
 
 template <typename T>
 class PmergeMe {
 	private:
 		std::vector<T> _vec;
+
+		typedef typename std::pair<T, T> pair;
+		typedef typename std::vector<pair> vec_pair;
+		vec_pair _pair;
+		int stragler;
+		
 	public:
-		PmergeMe() {}
-		PmergeMe(const PmergeMe &src) : _vec(src._vec) {}
-		~PmergeMe() {}
-		PmergeMe & operator=(const PmergeMe &src) {
-			if (this != &src) {
-				_vec = src._vec;
-			}
-			return *this;
-		}
+		PmergeMe(int ac, char **av);
+		PmergeMe(const PmergeMe &src);
+		~PmergeMe();
+		PmergeMe & operator=(const PmergeMe &src);
 
-		void addNumber(T num) {
-			_vec.push_back(num);
-		}
+		pair createpair();
+		void sort_pair(vec_pair &vec);
 
-		void print() {
-			for (typename std::vector<T>::iterator it = _vec.begin(); it != _vec.end(); it++) {
-				std::cout << *it << " ";
-			}
-			std::cout << std::endl;
-		}
+		bool 	isInt(std::string num);
+		int 	ft_stoi(const std::string& str);
 
-		void sort() {
-			std::sort(_vec.begin(), _vec.end());
-		}
+		// void addNumber(T num);
+		void print(); // print the vector. To be deleted later
+		void printPairs(); // print the pairs. To be deleted later.
+		// void bitwise_sort(vec_pair &vec);
+		void sort();
+
 };
 
 #endif

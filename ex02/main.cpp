@@ -6,37 +6,51 @@
 /*   By: mhaile <mhaile@student.42abudhabi.ae>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 19:33:00 by mhaile            #+#    #+#             */
-/*   Updated: 2024/06/05 19:53:25 by mhaile           ###   ########.fr       */
+/*   Updated: 2024/06/06 22:49:14 by mhaile           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "PmergeMe.hpp"
 
 int main(int ac, char **av) {
-	PmergeMe<int> p;
-
-	if (ac < 2) {
-		std::cout << "Usage: ./ex02 [numbers]" << std::endl;
-		return 1;
-	}
-	for (int i = 1; i < ac; i++) {
-		char *enptr;
-		double num = strtod(av[i], &enptr);
-		if (*enptr) {
-			std::cout << "Invalid input" << std::endl;
+	try {
+		PmergeMe<int> p(ac, av);
+		
+		if (ac < 2) {
+			std::cout << "Usage: ./ex02 [numbers]" << std::endl;
 			return 1;
 		}
-		int num_int = static_cast<int>(num);
-		p.addNumber(num_int);
+		
+		printf("Before sorting: ");
+		p.print();
+		std::cout << std::endl;
+		p.createpair();
+		printf("After sorting: ");
+		p.print();
+		
+		// for (int i = 1; i < ac; i++) {
+		// 	char *enptr;
+		// 	double num = strtod(av[i], &enptr);
+		// 	if (*enptr) {
+		// 		std::cout << "Invalid input" << std::endl;
+		// 		return 1;
+		// 	}
+		// 	int num_int = static_cast<int>(num);
+		// 	p.addNumber(num_int);
+		// }
+		
+		// std::cout << "Before sorting: ";
+		// p.print();
+
+		// p.sort();
+
+		// std::cout << "After sorting: ";
+		// p.print();
+
 	}
-
-	std::cout << "Before sorting: ";
-	p.print();
-
-	p.sort();
-
-	std::cout << "After sorting: ";
-	p.print();
+	catch (std::exception &e) {
+		std::cout << e.what() << std::endl;
+	}
 
 	return 0;
 }
