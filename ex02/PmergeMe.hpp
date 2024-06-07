@@ -6,7 +6,7 @@
 /*   By: mhaile <mhaile@student.42abudhabi.ae>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 19:13:03 by mhaile            #+#    #+#             */
-/*   Updated: 2024/06/07 16:00:57 by mhaile           ###   ########.fr       */
+/*   Updated: 2024/06/07 18:33:59 by mhaile           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,25 +34,22 @@ class PmergeMe {
 		int stragler;
 		
 	public:
-		PmergeMe(int ac, char **av);
+		PmergeMe();
 		PmergeMe(const PmergeMe &src);
 		~PmergeMe();
 		PmergeMe & operator=(const PmergeMe &src);
 
-		// bool parse_input(int ac, char **av);
-		pair createpair();
+		void sort();
+		bool createpair();
 		void sort_pair(vec_pair &vec);
 		void bitwise_merge();
 
-		bool 	isInt(std::string num);
-		int 	ft_stoi(const std::string& str);
 
-		// void addNumber(T num);
-		void print(); // print the vector. To be deleted later
-		void printPairs(); // print the pairs. To be deleted later.
-		// void bitwise_sort(vec_pair &vec);
-		void sort(); //Later to make this function the main function to sort the vector.
-
+		void parse_input(int ac, char **av);
+		bool isInt(std::string num);
+		int  ft_stoi(const std::string& str);
+		void print(); 		// print the vector.
+		void printPairs(); 	// print the pairs. To be deleted later.
 };
 
 #endif
