@@ -6,14 +6,14 @@
 /*   By: mhaile <mhaile@student.42abudhabi.ae>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 19:31:04 by mhaile            #+#    #+#             */
-/*   Updated: 2024/06/07 18:30:33 by mhaile           ###   ########.fr       */
+/*   Updated: 2024/06/07 20:59:53 by mhaile           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "PmergeMe.hpp"
 
 template <typename T>
-PmergeMe<T>::PmergeMe() { }
+PmergeMe<T>::PmergeMe() : _time(0), stragler(-1) { }
 
 template <typename T>
 PmergeMe<T>::PmergeMe(const PmergeMe &src) : _vec(src._vec) {
@@ -28,9 +28,15 @@ PmergeMe<T> & PmergeMe<T>::operator=(const PmergeMe &src) {
 	if (this != &src) {
 		_vec = src._vec;
 		_pair = src._pair;
+		_time = src._time;
 		stragler = src.stragler;
 	}
 	return *this;
+}
+
+template <typename T>
+double PmergeMe<T>::getTime() const {
+	return this->_time;
 }
 
 template <typename T>
@@ -39,9 +45,9 @@ void PmergeMe<T>::parse_input(int ac, char **av) {
 		if (!isInt(av[i]))
 			throw std::invalid_argument("Error: Invalid input");
 		
-		std::vector<int>::iterator it = std::find(_vec.begin(), _vec.end(), ft_stoi(av[i]));
-		if (it != _vec.end())
-			throw std::invalid_argument("Error: Duplicate number");
+		// std::vector<int>::iterator it = std::find(_vec.begin(), _vec.end(), ft_stoi(av[i]));
+		// if (it != _vec.end())
+		// 	throw std::invalid_argument("Error: Duplicate number");
 		
 		_vec.push_back(ft_stoi(av[i]));
 	}
@@ -200,15 +206,20 @@ void PmergeMe<T>::sort_pair(vec_pair &vec) {
 
 
 template <typename T>
-void PmergeMe<T>::sort() {
+void PmergeMe<T>::merge_sort() {
+
+	std::clock_t start = std::clock();
 	
-	if (!createpair())
+	if (!createpair()) {
+		_time = static_cast<double>(std::clock() - start) / (CLOCKS_PER_SEC);
 		return;
+	}
 	
 	sort_pair(_pair);
 	
 	bitwise_merge();
+
+	_time = static_cast<double>(std::clock() - start) / (CLOCKS_PER_SEC);
 }
 
-// template class PmergeMe<double>;
 template class PmergeMe<int>;

@@ -6,7 +6,7 @@
 /*   By: mhaile <mhaile@student.42abudhabi.ae>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 19:33:00 by mhaile            #+#    #+#             */
-/*   Updated: 2024/06/07 18:31:56 by mhaile           ###   ########.fr       */
+/*   Updated: 2024/06/07 21:01:12 by mhaile           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,12 @@ int main(int ac, char **av) {
 		std::cout << "Before: ";
 		p.print();
 
-		p.sort();
+		p.merge_sort();
 
 		std::cout << "After: ";
 		p.print();
+
+		std::cout << "time: " << std::fixed << std::setprecision(4) << p.getTime() << "ms" << std::endl;
 	}
 	catch (std::exception &e) {
 		std::cout << e.what() << std::endl;
