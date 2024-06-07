@@ -6,7 +6,7 @@
 /*   By: mhaile <mhaile@student.42abudhabi.ae>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 19:13:03 by mhaile            #+#    #+#             */
-/*   Updated: 2024/06/06 22:49:16 by mhaile           ###   ########.fr       */
+/*   Updated: 2024/06/07 16:00:57 by mhaile           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,12 @@
 #include <iostream>
 #include <algorithm>
 #include <vector>
+#include <list>
 #include <iterator>
 #include <utility>
 #include <sstream>
 #include <climits>
-#include <cstdio> // To be deleted later
+#include <cstdio> // To be deleted later. Note: remember to delete the print() function in PmergeMe.cpp
 
 template <typename T>
 class PmergeMe {
@@ -38,8 +39,10 @@ class PmergeMe {
 		~PmergeMe();
 		PmergeMe & operator=(const PmergeMe &src);
 
+		// bool parse_input(int ac, char **av);
 		pair createpair();
 		void sort_pair(vec_pair &vec);
+		void bitwise_merge();
 
 		bool 	isInt(std::string num);
 		int 	ft_stoi(const std::string& str);
@@ -48,7 +51,7 @@ class PmergeMe {
 		void print(); // print the vector. To be deleted later
 		void printPairs(); // print the pairs. To be deleted later.
 		// void bitwise_sort(vec_pair &vec);
-		void sort();
+		void sort(); //Later to make this function the main function to sort the vector.
 
 };
 

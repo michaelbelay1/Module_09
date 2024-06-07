@@ -6,7 +6,7 @@
 /*   By: mhaile <mhaile@student.42abudhabi.ae>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 19:31:04 by mhaile            #+#    #+#             */
-/*   Updated: 2024/06/06 22:48:59 by mhaile           ###   ########.fr       */
+/*   Updated: 2024/06/07 16:17:03 by mhaile           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,10 @@ PmergeMe<T>::PmergeMe(int ac, char** str) {
 	for (int i = 1; i < ac ; i++) {
 		if (!isInt(str[i]))
 			throw std::invalid_argument("Error: Invalid input");
+		
+		std::vector<int>::iterator it = std::find(_vec.begin(), _vec.end(), ft_stoi(str[i]));
+		if (it != _vec.end())
+			throw std::invalid_argument("Error: Duplicate number");
 		_vec.push_back(ft_stoi(str[i]));
 	}
 
@@ -53,7 +57,7 @@ void PmergeMe<T>::print() {
 
 template <typename T>
 void PmergeMe<T>::sort() {
-	std::sort(_vec.begin(), _vec.end());
+	
 }
 
 template <typename T>
@@ -79,13 +83,19 @@ typename PmergeMe<T>::pair PmergeMe<T>::createpair() {
 
 	sort_pair(_pair);
 	// printPairs();
-	_vec.clear();
-	for (size_t i = 0; i < _pair.size(); i++) {
-		_vec.push_back(_pair[i].first);
-		_vec.push_back(_pair[i].second);
-	}
-	if (stragler != -1)
-		_vec.push_back(stragler);
+	bitwise_merge();
+	
+
+		
+
+	
+	// _vec.clear();
+	// for (size_t i = 0; i < _pair.size(); i++) {
+	// 	_vec.push_back(_pair[i].first);
+	// 	_vec.push_back(_pair[i].second);
+	// }
+	// if (stragler != -1)
+	// 	_vec.push_back(stragler);
 
 	// printPairs();
 	
@@ -94,12 +104,40 @@ typename PmergeMe<T>::pair PmergeMe<T>::createpair() {
 }
 
 template <typename T>
+void PmergeMe<T>::bitwise_merge() {
+	std::list<T> S;
+	std::list<T> pend;
+
+	for (size_t i = 0; i < _pair.size(); i++) {
+		pend.push_back(_pair[i].first);
+		S.push_back(_pair[i].second);
+	}
+	S.push_front(pend.front());
+	pend.pop_front();
+	
+	while (!pend.empty()) {
+		typename std::list<T>::iterator it = std::lower_bound(S.begin(), S.end(), pend.front());
+		S.insert(it, pend.front());
+		pend.pop_front();		
+	}
+	if (stragler != -1) {
+		typename std::list<T>::iterator it = std::lower_bound(S.begin(), S.end(), stragler);
+		S.insert(it, stragler);
+	}
+	
+	_vec.clear();
+	for (typename std::list<T>::iterator it = S.begin(); it != S.end(); it++) {
+		_vec.push_back(*it);
+	}
+}
+
+template <typename T>
 void PmergeMe<T>::sort_pair(vec_pair &vec) {
 	(void)vec;
 	if (vec.size() == 1)
 		return;
 	size_t mid = vec.size() / 2;
-	printf("Mid: %zu\n", mid);
+	// printf("Mid: %zu\n", mid);
 
 	vec_pair left(vec.begin(), vec.begin() + mid);
 	vec_pair right(vec.begin() + mid, vec.end());
@@ -109,24 +147,23 @@ void PmergeMe<T>::sort_pair(vec_pair &vec) {
 	sort_pair(left);
 	sort_pair(right);
 
-	// Merge the two vectors.
-
-    size_t i = 0, j = 0, k = 0;
-    while (i < left.size() && j < right.size()) {
-        if (left[i] <= right[j]) {
-            vec[k++] = left[i++];
-        }
+	// Merge the two vectors. by sorting based on thier second element.
+	size_t i = 0, j = 0, k = 0;
+	while (i < left.size() && j < right.size()) {
+		if (left[i].second <= right[j].second) {
+			vec[k++] = left[i++];
+		}
 		else {
-            vec[k++] = right[j++];
-        }
-    }
-    while (i < left.size()) {
-        vec[k++] = left[i++];
-    }
-    while (j < right.size()) {
-        vec[k++] = right[j++];
-    }
-
+			vec[k++] = right[j++];
+		}
+	}
+	while (i < left.size()) {
+		vec[k++] = left[i++];
+	}
+	while (j < right.size()) {
+		vec[k++] = right[j++];
+	}
+	
 	
 	// Print left and right vectors. To be deleted later.//
 	// for (size_t i = 0; i < left.size(); i++) {

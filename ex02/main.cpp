@@ -6,7 +6,7 @@
 /*   By: mhaile <mhaile@student.42abudhabi.ae>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 19:33:00 by mhaile            #+#    #+#             */
-/*   Updated: 2024/06/06 22:49:14 by mhaile           ###   ########.fr       */
+/*   Updated: 2024/06/07 16:01:15 by mhaile           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,31 +21,14 @@ int main(int ac, char **av) {
 			return 1;
 		}
 		
-		printf("Before sorting: ");
-		p.print();
-		std::cout << std::endl;
+		// printf("Before sorting: ");
+		// p.print();
+		// std::cout << std::endl;
 		p.createpair();
-		printf("After sorting: ");
+		// printf("After sorting: ");
+		// std::cout << std::endl;
 		p.print();
-		
-		// for (int i = 1; i < ac; i++) {
-		// 	char *enptr;
-		// 	double num = strtod(av[i], &enptr);
-		// 	if (*enptr) {
-		// 		std::cout << "Invalid input" << std::endl;
-		// 		return 1;
-		// 	}
-		// 	int num_int = static_cast<int>(num);
-		// 	p.addNumber(num_int);
-		// }
-		
-		// std::cout << "Before sorting: ";
-		// p.print();
 
-		// p.sort();
-
-		// std::cout << "After sorting: ";
-		// p.print();
 
 	}
 	catch (std::exception &e) {
