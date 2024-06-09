@@ -6,7 +6,7 @@
 /*   By: mhaile <mhaile@student.42abudhabi.ae>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 19:33:00 by mhaile            #+#    #+#             */
-/*   Updated: 2024/06/08 19:53:11 by mhaile           ###   ########.fr       */
+/*   Updated: 2024/06/09 18:49:04 by mhaile           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,9 @@ int main(int ac, char **av) {
 		return 1;
 	}
 	
+	PmergeMe sorter;
+	
 	try {
-		PmergeMe sorter;
 		
 		sorter.parse_input(ac, av);
 
@@ -30,7 +31,8 @@ int main(int ac, char **av) {
 		sorter.merge_sort_list();
 		
 		std::cout << "After: ";
-		sorter.printVec();
+		sorter.printList();
+		// sorter.printVec();
 		std::cout << "Time to process a range of " << ac - 1 << " with std::vector : " << std::fixed << std::setprecision(4) << sorter.getTimeVec() << " ms" << std::endl;
 		std::cout << "Time to process a range of " << ac - 1 << " with std::list : " << std::fixed << std::setprecision(4) << sorter.getTimeList() << " ms" << std::endl;
 	}
