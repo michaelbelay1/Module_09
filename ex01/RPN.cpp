@@ -6,7 +6,7 @@
 /*   By: mhaile <mhaile@student.42abudhabi.ae>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 12:52:12 by mhaile            #+#    #+#             */
-/*   Updated: 2024/06/05 18:16:35 by mhaile           ###   ########.fr       */
+/*   Updated: 2024/06/12 16:24:25 by mhaile           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,20 +94,16 @@ std::string RPN::operand(std::string input) {
 // @param b: Second operand.
 void RPN::operation(int idx, int a, int b) {
     switch (idx) {
-        case 0:
-            // Case for addition: push the result of b + a onto the stack.
+        case 0: // Case for addition: push the result of b + a onto the stack.
             _stack.push(b + a);
             break;
-        case 1:
-            // Case for subtraction: push the result of b - a onto the stack.
+        case 1: // Case for subtraction: push the result of b - a onto the stack.
             _stack.push(b - a);
             break;
-        case 2:
-            // Case for multiplication: push the result of b * a onto the stack.
+        case 2: // Case for multiplication: push the result of b * a onto the stack.
             _stack.push(b * a);
             break;
-        case 3:
-            // Case for division: push the result of b / a onto the stack.
+        case 3: // Case for division: push the result of b / a onto the stack.
 			if (a == 0)
 				throw std::invalid_argument("Error: Division by zero");
             _stack.push(b / a);
