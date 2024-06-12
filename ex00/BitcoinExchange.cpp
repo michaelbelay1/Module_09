@@ -6,7 +6,7 @@
 /*   By: mhaile <mhaile@student.42abudhabi.ae>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 15:59:10 by mhaile            #+#    #+#             */
-/*   Updated: 2024/06/04 22:43:58 by mhaile           ###   ########.fr       */
+/*   Updated: 2024/06/12 16:10:49 by mhaile           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ std::map<std::string, std::string> BitcoinExchange::getData() {
 bool BitcoinExchange::is_infile(std::ifstream& file) {
 	if (file.is_open()) {
 		if (file.peek() == EOF) {
-			throw fileNotFoundException();
+			throw fileEmptyException();
 		}
 	}
 	else {
@@ -118,14 +118,16 @@ std::string BitcoinExchange::ft_trim(std::string str) {
 // Get the closest previous day from a given dates. 
 std::string BitcoinExchange::previousDay(std::string& date) {
 	std::map<std::string, std::string>::iterator it;
-	std::map<std::string, std::string>  mydata = getData();
 
-	it = mydata.lower_bound(date);
-	if (it == mydata.end()) {
-		std::cout << "Error: No data found for " << date << std::endl;
+	it = _data.lower_bound(date);
+	if (it == _data.begin()) {
 		return "2009-01-01";
 	}
-	return (it->first);
+	if (it == _data.end() || it->first != date) {
+		--it;
+	}
+	
+	return it->first;
 }
 
 // Convert a string to an integer using stringstream.
@@ -155,18 +157,22 @@ int BitcoinExchange::parseDate(std::string date) {
 	ssMonth >> monthInt;
 	ssDay >> dayInt;
 
-	if ((yearInt < 2009 || yearInt > 2022)
-		|| (monthInt < 1 || monthInt > 12)
+	if ((yearInt > 2024) || (monthInt < 1 || monthInt > 12)
 		|| (dayInt < 1 || dayInt > 31)) {
 		return 1;
 	}
-	if (yearInt == 2009) {
-		if (monthInt == 1) {
-			if (dayInt < 2) {
-				return 1;
-			}
-		}
-	}
+	// if ((yearInt < 2009 || yearInt > 2022)
+	// 	|| (monthInt < 1 || monthInt > 12)
+	// 	|| (dayInt < 1 || dayInt > 31)) {
+	// 	return 1;
+	// }
+	// if (yearInt == 2009) {
+	// 	if (monthInt == 1) {
+	// 		if (dayInt < 2) {
+	// 			return 1;
+	// 		}
+	// 	}
+	// }
 
 	if ((monthInt == 4 || monthInt == 6 || monthInt == 9
 		|| monthInt == 11) && dayInt > 30) {
@@ -184,14 +190,18 @@ std::map<std::string, std::string>::iterator  BitcoinExchange::closestDate(std::
 	std::map<std::string, std::string>::iterator it;
 	std::string prevDate = date;
 	it = _data.find(date);
+	if (it != _data.end())
+		return it;
 	while (it == _data.end()) {
 		std::string& currentDate = prevDate;
+		
 		prevDate = previousDay(currentDate);
 		if (prevDate == "2009-01-01")
-			break;
+			return _data.end();
 		it = _data.find(prevDate);
 	}
 	return it;
+	
 }
 
 // After parsing is done, extract the value from the input file. Display the final result.
@@ -222,6 +232,10 @@ int BitcoinExchange::extractValue(std::ifstream& file) {
 		}
 
 		std::map<std::string, std::string>::iterator it = closestDate(date);
+		if (it == _data.end()) {
+			std::cout << "Error: No data found for " << date << std::endl;
+			continue;
+		}
 		
 		std::cout << date << " => " << value << " = " << ft_stoi(it->second) * ft_stoi(value) << std::endl;
 	}
@@ -247,23 +261,30 @@ int BitcoinExchange::setDB(std::ifstream& file) {
 		
 		if (date.length() != 10 || (date[4] != '-' || date[7] != '-')) {
 			std::cout << "Error: date formate in DB => " << date << std::endl;
-			return (1);
+			continue;
 		}
 
 		char *endptr;
 		double val = std::strtod(value.c_str(), &endptr);
 		if (*endptr != '\0' || val < 0) {
 			std::cout << "Error: Invalid value in DB: " << value << std::endl;
-			return (1);
+			continue;
 		}
 		
 		if (parseDate(date)) {
 			std::cout << "Error: Invalid date in DB: " << date << std::endl;
-			return (1);
+			continue;
 		}
-	
+		
+		if (_data.find(date) != _data.end()) {
+			std::cout << "Error: Duplicate date in DB: " << date << std::endl;
+			continue;
+		}
+
 		_data[date] = value;
 	}
+	if (_data.empty())
+		throw invalidDBException();
 	return (0);
 }
 
